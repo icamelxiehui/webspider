@@ -13,15 +13,14 @@ import os
 
 
 class NewsMongoDb(object):
-    def __init__(self):
+    def __init__(self, table_name):
         server = "localhost"
         port = 27017
         db_name = "big_data"
-        table = "news"
 
         con = pymongo.MongoClient(server, port)
         db = con[db_name]
-        self.collection = db[table]	
+        self.collection = db[table_name]	
 
     def save(self, result):
         self.collection.update(
@@ -43,13 +42,13 @@ class NewsSqliteDb(object):
 
 class NewsDb(object):
 
-    def __init__(self):
-        self.news_mongo = NewsMongoDb()
-        self.news_sqlite = NewsSqliteDb()
+    def __init__(self, table_name):
+        self.news_mongo = NewsMongoDb(table_name)
+        #self.news_sqlite = NewsSqliteDb()
 
     def process(self, result):
-        #self.news_mongo.save(result)
-        self.news_sqlite.save(result)
+        self.news_mongo.save(result)
+        #self.news_sqlite.save(result)
 
 if __name__ == "__main__":
     news_db = NewsDb()
